@@ -73,6 +73,7 @@ class Tree:
 
     def _height2(self, p):
         """ Return the height of the subtree rooted at Position p O(n)"""
+        # print("Getting height")
         if self.is_leaf(p):
             return 0
         return 1 + max(self._height2(c) for c in self.children(p))
@@ -148,7 +149,7 @@ class LinkedBinaryTree(BinaryTree):
         """
 
         def __init__(self, container, node):
-            """ Constructor should not be involed by user"""
+            """ Constructor should not be invoked by user"""
             self._container = container
             self._node = node
 
@@ -164,159 +165,197 @@ class LinkedBinaryTree(BinaryTree):
             """
             return type(other) is type(self) and other._node is self._node
 
-        def _validate(self, p):
-            """
-            Return associated node, if position is valid
-            """
-            if not isinstance(p, self.Position):
-                raise TypeError('p must be a proper Position type')
-            if p.container is not self:
-                raise ValueError("p does not belong to this container")
-            if p._node._parent is p._node: # convention for deprecated nodes
-                raise ValueError("p is no longer valid")
-            return p._node
+    def _validate(self, p):
+        """
+        Return associated node, if position is valid
+        """
+        if not isinstance(p, self.Position):
+            raise TypeError('p must be a proper Position type')
+        if p._container is not self:
+            raise ValueError("p does not belong to this container")
+        if p._node._parent is p._node: # convention for deprecated nodes
+            raise ValueError("p is no longer valid")
+        return p._node
 
-        def _make_position(self, node):
-            """
-            Return Position instance for given node (or None if no node)
-            """
-            return self.Position(self, node) if node is not None else None
+    def _make_position(self, node):
+        """
+        Return Position instance for given node (or None if no node)
+        """
+        return self.Position(self, node) if node is not None else None
 
-        # Binary tree constructor
-        def init (self):
-            """Create an initially empty binary tree."""
-            self._root = None
-            self._size = 0
+    # Binary tree constructor
+    def __init__(self):
+        """Create an initially empty binary tree."""
+        self._root = None
+        self._size = 0
 
-        # Public accessors
-        def len (self):
-            """ O(1)
-            Return the total number of elements in the tree."""
-            return self._size
+    # Public accessors
+    def len (self):
+        """ O(1)
+        Return the total number of elements in the tree."""
+        return self._size
 
-        def root(self):
-            """O(1)
-            Return the root Position of the tree (or None if tree is empty).
-            """
-            return self._make_position(self._root)
+    def root(self):
+        """O(1)
+        Return the root Position of the tree (or None if tree is empty).
+        """
+        return self._make_position(self._root)
 
-        def parent(self, p):
-            """O(1)
-            Return the Position of p s parent (or None if p is root)."""
-            node = self._validate(p)
-            return self._make_position(node._parent)
+    def parent(self, p):
+        """O(1)
+        Return the Position of p's parent (or None if p is root)."""
+        node = self._validate(p)
+        return self._make_position(node._parent)
 
-        def left(self, p):
-            """O(1)
-            Return the Position of p s left child (or None if no left child).
-            """
-            node = self._validate(p)
-            return self._make_position(node._left)
+    def left(self, p):
+        """O(1)
+        Return the Position of p's left child (or None if no left child).
+        """
+        node = self._validate(p)
+        return self._make_position(node._left)
 
-        def right(self, p):
-            """O(1)
-            Return the Position of p s right child (or None if no right child).
-            """
-            node = self._validate(p)
-            return self._make_position(node._right)
+    def right(self, p):
+        """O(1)
+        Return the Position of p's right child (or None if no right child).
+        """
+        node = self._validate(p)
+        return self._make_position(node._right)
 
-        def num_children(self, p):
-            """O(1)
-            Return the number of children of Position p.
-            """
-            node = self._validate(p)
-            count = 0
-            if node._left is not None: # left child exists
-                count += 1
-            if node._right is not None: # right child exists
-                count += 1
-            return count
+    def num_children(self, p):
+        """O(1)
+        Return the number of children of Position p.
+        """
+        node = self._validate(p)
+        count = 0
+        if node._left is not None: # left child exists
+            count += 1
+        if node._right is not None: # right child exists
+            count += 1
+        return count
 
-        def add_root(self, e):
-            """O(1)
-            Place element e at the root of an empty tree and return new Position.
-            Raise ValueError if tree nonempty.
-            """
-            if self._root is not None:
-                raise ValueError("Root exists")
-            self._size = 1
-            self._root = self._Node(e)
-            return self._make_position(self._root)
+    def add_root(self, e):
+        """O(1)
+        Place element e at the root of an empty tree and return new Position.
+        Raise ValueError if tree nonempty.
+        """
+        if self._root is not None:
+            raise ValueError("Root exists")
+        self._size = 1
+        self._root = self._Node(e)
+        return self._make_position(self._root)
 
-        def add_left(self, p, e):
-            """O(1)
-            Create a new left child for Position p, storing element e.
-            Return the Position of new node.
-            Raise ValueError if Position p is invalid or p already has a left child.
-            """
-            node = self._validate(p)
-            if node. left is not None:
-                raise ValueError("Left child exists")
-            self._size += 1
-            node. left = self._Node(e, node) # node is its parent
-            return self._make_position(node._left)
+    def add_left(self, p, e):
+        """O(1)
+        Create a new left child for Position p, storing element e.
+        Return the Position of new node.
+        Raise ValueError if Position p is invalid or p already has a left child.
+        """
+        node = self._validate(p)
+        if node._left is not None:
+            raise ValueError("Left child exists")
+        self._size += 1
+        node._left = self._Node(e, node) # node is its parent
+        return self._make_position(node._left)
 
-        def add_right(self, p, e):
-            """O(1)
-            Create a new right child for Position p, storing element e.
-            Return the Position of new node.
-            Raise ValueError if Position p is invalid or p already has a right child.
-            """
-            node = self._validate(p)
-            if node._right is not None:
-                raise ValueError("Right child exists")
-            self._size += 1
-            node._right = self._Node(e, node) # node is its parent
-            return self._make_position(node._right)
+    def add_right(self, p, e):
+        """O(1)
+        Create a new right child for Position p, storing element e.
+        Return the Position of new node.
+        Raise ValueError if Position p is invalid or p already has a right child.
+        """
+        node = self._validate(p)
+        if node._right is not None:
+            raise ValueError("Right child exists")
+        self._size += 1
+        node._right = self._Node(e, node) # node is its parent
+        return self._make_position(node._right)
 
-        def replace(self, p, e):
-            """O(1)
-            Replace the element at position p with e, and return old element.
-            """
-            node = self._validate(p)
-            old = node._element
-            node._element = e
-            return old
+    def replace(self, p, e):
+        """O(1)
+        Replace the element at position p with e, and return old element.
+        """
+        node = self._validate(p)
+        old = node._element
+        node._element = e
+        return old
 
-        def delete(self, p):
-            """O(1)
-            Delete the node at Position p, and replace it with its child, if any.
-            Return the element that had been stored at Position p.
-            Raise ValueError if Position p is invalid or p has two children.
-            """
-            node = self._validate(p)
-            if self.num_children(p) == 2: raise ValueError("p has two children")
-            child = node._left if node._left else node._right # might be None
-            if child is not None:
-                child._parent = node._parent # child's grandparent becomes parent
-            if node is self._root:
-                self._root = child # child becomes root
+    def delete(self, p):
+        """O(1)
+        Delete the node at Position p, and replace it with its child, if any.
+        Return the element that had been stored at Position p.
+        Raise ValueError if Position p is invalid or p has two children.
+        """
+        node = self._validate(p)
+        if self.num_children(p) == 2: raise ValueError("p has two children")
+        child = node._left if node._left else node._right # might be None
+        if child is not None:
+            child._parent = node._parent # child's grandparent becomes parent
+        if node is self._root:
+            self._root = child # child becomes root
+        else:
+            parent = node._parent
+            if node is parent._left:
+                parent._left = child
             else:
-                parent = node._parent
-                if node is parent._left:
-                    parent._left = child
-                else:
-                    parent._right = child
-            self._size -= 1
-            node._parent = node # convention for deprecated node
-            return node._element
+                parent._right = child
+        self._size -= 1
+        node._parent = node # convention for deprecated node
+        return node._element
 
-        def attach(self, p, t1, t2):
-            """O(1)
-            Attach trees t1 and t2 as left and right subtrees of external p.
-            """
-            node = self._validate(p)
-            if not self.is_leaf(p): raise ValueError("position must be leaf")
-            if not type(self) is type(t1) is type(t2): # all trees must be same type
-                raise TypeError("Tree types must match")
-            self._size += len(t1) + len(t2)
-            if not t1.is_empty( ): # attached tas left subtree of node
-                t1._root._parent = node
-                node._left = t1._root
-                t1._root = None # set t1 instance to empty
-                t1._size = 0
-            if not t2.is_empty(): # attached tas right subtree of node
-                t2._root._parent = node
-                node._right = t2._root
-                t2._root = None # set t2 instance to empty
-                t2._size = 0
+    def attach(self, p, t1, t2):
+        """O(1)
+        Attach trees t1 and t2 as left and right subtrees of external p.
+        """
+        node = self._validate(p)
+        if not self.is_leaf(p): raise ValueError("position must be leaf")
+        if not type(self) is type(t1) is type(t2): # all trees must be same type
+            raise TypeError("Tree types must match")
+        self._size += len(t1) + len(t2)
+        if not t1.is_empty( ): # attached tas left subtree of node
+            t1._root._parent = node
+            node._left = t1._root
+            t1._root = None # set t1 instance to empty
+            t1._size = 0
+        if not t2.is_empty(): # attached tas right subtree of node
+            t2._root._parent = node
+            node._right = t2._root
+            t2._root = None # set t2 instance to empty
+            t2._size = 0
+
+linked_binary_tree = LinkedBinaryTree()
+root = linked_binary_tree.add_root(4)
+print("The value of root: ", linked_binary_tree.root().element()) # Output: 4
+
+print("Root we added is actual root? ", root == linked_binary_tree.root()) # Output: True
+
+left_child = linked_binary_tree.add_left(root, 1)
+print("First child: ", next(linked_binary_tree.children(root)).element()) # Output: 1
+
+right_child = linked_binary_tree.add_right(root, 5)
+children = linked_binary_tree.children(root)
+
+print("First child: ", next(children).element()) # Output: 1
+print("Second child: ", next(children).element()) # Output: 5
+
+lbt = linked_binary_tree
+print("Root children: ", lbt.num_children(root)) # Output 2
+print("Root grandchildren: ", lbt.num_children(lbt.left(root))) # Output 0
+print("Length of tree: ", lbt.len())
+
+l_left_child = lbt.add_left(left_child, -1)
+r_left_child = lbt.add_right(left_child, 2)
+
+parent_of_left = lbt.parent(left_child)
+print("Parent of left child is root? ", lbt.is_root(parent_of_left)) # True
+
+print("Depth at root: ", lbt.depth(root)) # 0
+print("Depth at left child of left child: ", lbt.depth(l_left_child)) # 2
+
+print("Height at root: ", lbt.height()) # 2
+print("Height at left child: ", lbt.height(left_child)) # 1
+print("Height at right child of left child: ", lbt.height(r_left_child)) # 0
+
+# Replace
+# initially -1
+print("Replaced left child of left child: ", lbt.replace(l_left_child, -4)) # 1
+print("New left child of left child: ", l_left_child.element())
