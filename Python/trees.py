@@ -1,7 +1,7 @@
 class Tree:
     """Abstract base class representing a tree structure."""
 
-    #------------------------------- nested Position class -------------------------------
+    # Nested Position class
     class Position:
     """An abstraction representing the location of a single element."""
 
@@ -17,7 +17,7 @@ class Tree:
         """Return True if other does not represent the same location."""
         return not (self == other) # opposite of eq
 
-    # ---------- abstract methods that concrete subclass must support ----------
+    # Abstract methods that concrete subclass must support=
     def root(self):
     """Return Position representing the tree s root (or None if empty)."""
     raise NotImplementedError( must be implemented by subclass )
@@ -58,7 +58,7 @@ class Tree:
         return max(self.depth(p) for p in self.positions() if self.is_leaf(p))
 
     def _height2(self, p):
-        """ Return the height of the subtree rooted at Position p"""
+        """ Return the height of the subtree rooted at Position p O(n)"""
         if self.is_leaf(p):
             return 0
         return 1 + max(self._height2(c) for c in self.children(p))
@@ -68,3 +68,49 @@ class Tree:
         Return height of the sub-tree rooted at Position p
         If p is None, return the height of the entire tree
         """
+        if p is None:
+            p = self.root()
+        return self._height2(p)
+
+class BinaryTree(Tree):
+    """
+    Abstract base class representing a binary tree structure
+    """
+
+    # Additional Abstract methods
+    def left(self, p):
+        """
+        Return a position representing p's left child. Return None if
+        p does not have a left child
+        """
+        raise NotImplementedError("Must be implemented by subclass")
+
+    def right(self, p):
+        """
+        Return a position representing p's right child. Return None if
+        p does not have a right child
+        """
+        raise NotImplementedError("Must be implemented by subclass")
+
+    # Concrete methods
+    def sibling(self, p):
+        """
+        Return a position representing p's sibling (or None if no sibling)
+        """
+        parent = self.parent(p)
+        if parent is None:
+            return None
+        else:
+            if p == self.left(parent):
+                return self.right(parent)
+            else:
+                return self.left(parent)
+
+    def children(self, p):
+        """
+        Generate an iteration of Positions representing p's children
+        """
+        if self.left(p) is not None:
+            yield self.left(p)
+        if self.right(p) is not None:
+            yield self.right(p)
