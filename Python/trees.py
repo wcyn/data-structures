@@ -44,7 +44,7 @@ class Tree:
         """
         raise NotImplementedError("must be implemented by subclass")
 
-    def len (self):
+    def __len__(self):
         """Return the total number of elements in the tree."""
         raise NotImplementedError("must be implemented by subclass")
 
@@ -58,7 +58,7 @@ class Tree:
 
     def is_empty(self):
         """O(1)"""
-        return len(self) == 0
+        return self.__len__() == 0
 
     def depth(self, p):
         """O(dp+1)
@@ -86,6 +86,54 @@ class Tree:
         if p is None:
             p = self.root()
         return self._height2(p)
+
+    def __iter__(self):
+        """
+        Generate an iteratin of the tree's elements
+        """
+        for p in self.positions():
+            yield p.element()
+
+    def preorder(self):
+        """
+        Generate a preorder iteration of postiions in the tree
+        """
+        if not self.is_empty():
+            for p in  self._subtree_preorder(self.root()):
+                yield p
+
+    def _subtree_preorder(self, p):
+        """
+        Generate a preorder iteration of positions in subteree rooted at p
+        """
+        yield p # visit p before its subtrees
+        for c in self.children(p):
+            for other in self._subtree_preorder(c): # do preorder of c's subtree
+                yield other
+
+    def positions(self):
+        """
+        Generate an iteration of the tree's positions
+        """
+        return self.preorder()
+
+    def postorder(self):
+        """
+        Generate a postorder iteration of postiions in the tree
+        """
+        if not self.is_empty():
+            for p in  self._subtree_postorder(self.root()):
+                yield p
+
+    def _subtree_postorder(self, p):
+        """
+        Generate a postorder iteration of positions in subteree rooted at p
+        """
+
+        for c in self.children(p):
+            for other in self._subtree_postorder(c): # do preorder of c's subtree
+                yield other
+        yield p # visit p after its subtrees
 
 class BinaryTree(Tree):
     """
@@ -190,7 +238,7 @@ class LinkedBinaryTree(BinaryTree):
         self._size = 0
 
     # Public accessors
-    def len (self):
+    def __len__(self):
         """ O(1)
         Return the total number of elements in the tree."""
         return self._size
@@ -322,6 +370,30 @@ class LinkedBinaryTree(BinaryTree):
             t2._root = None # set t2 instance to empty
             t2._size = 0
 
+    def inorder(self):
+        if not self.is_empty():
+            for p in self._subtree_inorder(self.root()):
+                yield p
+
+    def _subtree_inorder(self, p):
+        """
+        Generate inorder iteration of positions in the tree
+        """
+        if self.left(p) is not None:
+            for other in self._subtree_inorder(self.left(p)):
+                yield other
+        yield p
+
+        if self.right(p) is not None:
+            for other in self._subtree_inorder(self.right(p)):
+                yield other
+
+    def positions(self):
+        """
+        Make inorder traversal the default traversal method for the Binary Tree
+        """
+        return self.inorder()
+
 linked_binary_tree = LinkedBinaryTree()
 root = linked_binary_tree.add_root(4)
 print("The value of root: ", linked_binary_tree.root().element()) # Output: 4
@@ -340,7 +412,7 @@ print("Second child: ", next(children).element()) # Output: 5
 lbt = linked_binary_tree
 print("Root children: ", lbt.num_children(root)) # Output 2
 print("Root grandchildren: ", lbt.num_children(lbt.left(root))) # Output 0
-print("Length of tree: ", lbt.len())
+print("Length of tree: ", len(lbt))
 
 l_left_child = lbt.add_left(left_child, -1)
 r_left_child = lbt.add_right(left_child, 2)
@@ -359,3 +431,8 @@ print("Height at right child of left child: ", lbt.height(r_left_child)) # 0
 # initially -1
 print("Replaced left child of left child: ", lbt.replace(l_left_child, -4)) # 1
 print("New left child of left child: ", l_left_child.element())
+
+print("Preorder Positions generator: ", lbt.inorder())
+print("Preorder Positions values: ", [position.element() for position in lbt.preorder()])
+print("Postorder Positions values: ", [position.element() for position in lbt.postorder()])
+print("Inrder Positions values: ", [position.element() for position in lbt.inorder()])
