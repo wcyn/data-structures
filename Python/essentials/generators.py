@@ -32,7 +32,7 @@ def efficient_factors_gen(num):
 print(factors_gen(100))
 print("Efficient factors gen: ", [i for i in efficient_factors_gen(100)])
 
-# A fibnacci series generator
+# A fibonacci series generator
 def fibonacci_series(num):
     previous_num = 0
     current_num = 1
