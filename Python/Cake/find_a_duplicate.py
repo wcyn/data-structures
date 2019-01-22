@@ -30,7 +30,7 @@ def find_a_duplicate(num_list):
             else:
                 # Swap em
                 num_list[current_index], num_list[current_num-1] = num_list[current_num-1], num_list[current_index]
-    # print(iters)
+    print('Iters: ', iters)
     return None
 
 
@@ -51,7 +51,7 @@ def find_repeat(the_list):
         items_in_lower_range = 0
         for item in the_list:
             # Is it in the lower range?
-            if item >= lower_range_floor and item <= lower_range_ceiling:
+            if lower_range_floor <= item <= lower_range_ceiling:
                 items_in_lower_range += 1
 
         distinct_possible_integers_in_lower_range = (
@@ -73,9 +73,38 @@ def find_repeat(the_list):
     return floor
 
 
-nums = [1, 1, 3, 2, 4]
-n = [3, 5, 7, 2, 4, 6, 1]
-print(find_a_duplicate(nums))
-print(nums)
+def find_duplicate_non_destructive(num_list):
+    if len(num_list) < 2:
+        return None
 
-print(find_repeat(nums))
+    floor, ceil = 0, len(num_list)-2
+
+    while floor < ceil:
+        original_mid = floor + ((ceil - floor)//2)
+        lower_range_floor, lower_range_ceil = floor, original_mid
+        print(lower_range_floor, lower_range_ceil)
+        higher_range_floor, higher_range_ceil = original_mid+1, ceil
+
+        nums_in_lower_range = 0
+        for num in num_list:
+            if lower_range_floor + 1 <= num <= lower_range_ceil + 1:
+                nums_in_lower_range += 1
+
+        if nums_in_lower_range > original_mid + 1:
+            # Duplicate is in the lower range
+            floor, ceil = lower_range_floor, lower_range_ceil
+            # print(floor, ceil)
+        else:
+            floor, ceiling = higher_range_floor, higher_range_ceil
+
+    return floor + 1
+
+
+nums = [6, 3, 1, 2, 4, 5]
+n = [3, 5, 4, 2, 4, 6, 1]
+n2 = [1, 2, 5, 3, 4, 5]
+n3 = [1, 3, 2, 3]
+# print(find_a_duplicate(n2))
+# print(nums)
+print(find_duplicate_non_destructive(n2))
+# print(find_repeat(nums))
