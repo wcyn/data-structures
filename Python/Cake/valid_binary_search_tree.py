@@ -114,7 +114,7 @@ def is_binary_search_tree_recursive(node, low, high):
 b_tree = BinaryTree()
 root = b_tree.Node(5)
 node_2 = root.insert_left(2)
-node_10 = root.insert_right(10)
+node_10 = root.insert_right(11)
 node_2.insert_left(1)
 node_2.insert_right(3)
 node_10.insert_left(10)
@@ -144,3 +144,25 @@ def in_order_traversal(node, prev):
 
 print(in_order_traversal(root, {"prev": float('-inf')}))
 
+
+def in_order_traversal_2(node):
+    print("Traversing: ", node.value)
+    if not node.right and not node.left:
+        return [node.value]
+
+    node_left = in_order_traversal_2(node.left)
+    print("Node Left: ", node_left)
+    node_right = in_order_traversal_2(node.right)
+    print("Node Right: ", node_right)
+
+    nodes = list()
+    nodes.extend(node_left)
+    nodes.extend([node.value])
+    nodes.extend(node_right)
+    # nodes.add(node_left)
+    # nodes.add(node_right)
+
+    return nodes
+
+print("\n\nPrinting: \n")
+print(in_order_traversal_2(root))
