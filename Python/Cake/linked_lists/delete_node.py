@@ -30,7 +30,7 @@ b = LinkedListNode('B')
 c = LinkedListNode('C')
 
 a.next = b
-# b.next = c
+b.next = c
 
 
 def delete_linked_list_node(node, previous_node):
