@@ -12,6 +12,7 @@
 # We're going to run this function on our new, super-hip MacBook Pro With Retina Display™.
 # Thing is, the damn thing came with the RAM soldered right to the motherboard,
 # so we can't upgrade our RAM. So we need to optimize for space!
+import unittest
 
 
 def find_a_duplicate(num_list):
@@ -108,3 +109,31 @@ n3 = [1, 3, 2, 3]
 # print(nums)
 print(find_duplicate_non_destructive(n2))
 # print(find_repeat(nums))
+
+# Tests
+
+
+class Test(unittest.TestCase):
+
+    def test_just_the_repeated_number(self):
+        actual = find_repeat([1, 1])
+        expected = 1
+        self.assertEqual(actual, expected)
+
+    def test_short_list(self):
+        actual = find_repeat([1, 2, 3, 2])
+        expected = 2
+        self.assertEqual(actual, expected)
+
+    def test_medium_list(self):
+        actual = find_repeat([1, 2, 5, 5, 5, 5])
+        expected = 5
+        self.assertEqual(actual, expected)
+
+    def test_long_list(self):
+        actual = find_repeat([4, 1, 4, 8, 3, 2, 7, 6, 5])
+        expected = 4
+        self.assertEqual(actual, expected)
+
+
+unittest.main(verbosity=2)

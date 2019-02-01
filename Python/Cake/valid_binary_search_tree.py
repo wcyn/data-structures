@@ -6,7 +6,7 @@
 # BSTs are useful for quick lookups. If the tree is balanced,
 # we can search for a given value in the tree in O(lg(n))O(lg(n)) time.
 import collections
-
+import unittest
 
 class BinaryTree:
     def __init__(self, root=None):
@@ -166,3 +166,83 @@ def in_order_traversal_2(node):
 
 print("\n\nPrinting: \n")
 print(in_order_traversal_2(root))
+# The simplest ways to traverse the tree are depth-first ↴ and breadth-first.
+# They have the same time cost (they each visit each node once).
+# Depth-first traversal of a tree uses memory proportional to the
+# depth of the tree, while breadth-first traversal uses memory
+# proportional to the breadth of the tree (how many nodes there
+# are on the "level" that has the most nodes).
+
+# Because the tree's breadth can as much as double each time it gets one
+# level deeper, depth-first traversal is likely to be more space-efficient
+# than breadth-first traversal, though they are strictly both O(n)O(n)
+# additional space in the worst case. The space savings are obvious if we
+# know our binary tree is balanced—its depth will be O(\lg{n})O(lgn) and
+# its breadth will be O(n)O(n).
+
+
+# Tests
+
+class Test(unittest.TestCase):
+
+    class BinaryTreeNode(object):
+
+        def __init__(self, value):
+            self.value = value
+            self.left = None
+            self.right = None
+
+        def insert_left(self, value):
+            self.left = Test.BinaryTreeNode(value)
+            return self.left
+
+        def insert_right(self, value):
+            self.right = Test.BinaryTreeNode(value)
+            return self.right
+
+    def test_valid_full_tree(self):
+        tree = Test.BinaryTreeNode(50)
+        left = tree.insert_left(30)
+        right = tree.insert_right(70)
+        left.insert_left(10)
+        left.insert_right(40)
+        right.insert_left(60)
+        right.insert_right(80)
+        result = is_binary_search_tree(tree)
+        self.assertTrue(result)
+
+    def test_both_subtrees_valid(self):
+        tree = Test.BinaryTreeNode(50)
+        left = tree.insert_left(30)
+        right = tree.insert_right(80)
+        left.insert_left(20)
+        left.insert_right(60)
+        right.insert_left(70)
+        right.insert_right(90)
+        result = is_binary_search_tree(tree)
+        self.assertFalse(result)
+
+    def test_descending_linked_list(self):
+        tree = Test.BinaryTreeNode(50)
+        left = tree.insert_left(40)
+        left_left = left.insert_left(30)
+        left_left_left = left_left.insert_left(20)
+        left_left_left.insert_left(10)
+        result = is_binary_search_tree(tree)
+        self.assertTrue(result)
+
+    def test_out_of_order_linked_list(self):
+        tree = Test.BinaryTreeNode(50)
+        right = tree.insert_right(70)
+        right_right = right.insert_right(60)
+        right_right.insert_right(80)
+        result = is_binary_search_tree(tree)
+        self.assertFalse(result)
+
+    def test_one_node_tree(self):
+        tree = Test.BinaryTreeNode(50)
+        result = is_binary_search_tree(tree)
+        self.assertTrue(result)
+
+
+unittest.main(verbosity=2)

@@ -3,7 +3,7 @@
 #
 # Write a function kth_to_last_node() that takes an integer k and the head_node of a singly-linked list,
 # and returns the kth to last node in the list.
-
+import unittest
 from collections import deque
 
 
@@ -62,6 +62,10 @@ def get_kth_to_last_node_constant_space(k, head_node):
 
 def get_kth_to_last_node_constant_space_best(k, head_node):
     right_node = left_node = head_node
+    if k < 1:
+        raise ValueError(
+            'Impossible to find less than first to last node: %s' % k
+        )
 
     for _ in range(k-1):
         if not right_node:
@@ -88,3 +92,51 @@ print(get_kth_to_last_node_constant_space_best(2, a).value)
 # So don't be fooled: "one pass" isn't always fewer steps than "two passes."
 # Always ask yourself, "Have I actually changed the number of steps?"
 
+
+class Test(unittest.TestCase):
+
+    class LinkedListNode(object):
+
+        def __init__(self, value, next=None):
+            self.value = value
+            self.next  = next
+
+        def get_values(self):
+            node = self
+            values = []
+            while node is not None:
+                values.append(node.value)
+                node = node.next
+            return values
+
+    def setUp(self):
+        self.fourth = Test.LinkedListNode(4)
+        self.third = Test.LinkedListNode(3, self.fourth)
+        self.second = Test.LinkedListNode(2, self.third)
+        self.first = Test.LinkedListNode(1, self.second)
+
+    def test_first_to_last_node(self):
+        actual = get_kth_to_last_node_constant_space_best(1, self.first)
+        expected = self.fourth
+        self.assertEqual(actual, expected)
+
+    def test_second_to_last_node(self):
+        actual = get_kth_to_last_node_constant_space_best(2, self.first)
+        expected = self.third
+        self.assertEqual(actual, expected)
+
+    def test_first_node(self):
+        actual = get_kth_to_last_node_constant_space_best(4, self.first)
+        expected = self.first
+        self.assertEqual(actual, expected)
+
+    def test_k_greater_than_linked_list_length(self):
+        with self.assertRaises(Exception):
+            get_kth_to_last_node_constant_space_best(5, self.first)
+
+    def test_k_is_zero(self):
+        with self.assertRaises(Exception):
+            get_kth_to_last_node_constant_space_best(0, self.first)
+
+
+unittest.main(verbosity=2)

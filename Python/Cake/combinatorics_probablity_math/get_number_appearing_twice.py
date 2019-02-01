@@ -3,6 +3,7 @@
 # appears once except for one number that appears twice.
 #
 # Write a function for finding the number that appears twice.
+import unittest
 
 
 def get_duplicate_number(nums):
@@ -16,3 +17,24 @@ def get_duplicate_number(nums):
 
 num_list = [1, 3, 2, 4, 3]
 print(get_duplicate_number(num_list))
+
+
+class Test(unittest.TestCase):
+
+    def test_short_list(self):
+        actual = get_duplicate_number([1, 2, 1])
+        expected = 1
+        self.assertEqual(actual, expected)
+
+    def test_medium_list(self):
+        actual = get_duplicate_number([4, 1, 3, 4, 2])
+        expected = 4
+        self.assertEqual(actual, expected)
+
+    def test_long_list(self):
+        actual = get_duplicate_number([1, 5, 9, 7, 2, 6, 3, 8, 2, 4])
+        expected = 2
+        self.assertEqual(actual, expected)
+
+
+unittest.main(verbosity=2)

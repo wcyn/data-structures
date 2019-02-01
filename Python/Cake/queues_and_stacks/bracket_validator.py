@@ -8,6 +8,7 @@
 # '(', '{', '[' are called "openers."
 # ')', '}', ']' are called "closers."
 # Write an efficient function that tells us whether or not an input string's openers and closers are properly nested.
+import unittest
 
 
 def validate_brackets(chars):
@@ -34,3 +35,37 @@ b1 = "{ [ ] ( ) }"
 b2 = "{ [ ( ] ) }"
 print(validate_brackets(b1))
 print(validate_brackets(b2))
+
+
+class Test(unittest.TestCase):
+
+    def test_valid_short_code(self):
+        result = validate_brackets('()')
+        self.assertTrue(result)
+
+    def test_valid_longer_code(self):
+        result = validate_brackets('([]{[]})[]{{}()}')
+        self.assertTrue(result)
+
+    def test_interleaved_openers_and_closers(self):
+        result = validate_brackets('([)]')
+        self.assertFalse(result)
+
+    def test_mismatched_opener_and_closer(self):
+        result = validate_brackets('([][]}')
+        self.assertFalse(result)
+
+    def test_missing_closer(self):
+        result = validate_brackets('[[]()')
+        self.assertFalse(result)
+
+    def test_extra_closer(self):
+        result = validate_brackets('[[]]())')
+        self.assertFalse(result)
+
+    def test_empty_string(self):
+        result = validate_brackets('')
+        self.assertTrue(result)
+
+
+unittest.main(verbosity=2)

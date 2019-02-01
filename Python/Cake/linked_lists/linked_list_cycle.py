@@ -70,4 +70,67 @@ print(contains_cycle(a))
 # What if instead of a simple linked list, you had a structure where each node could have several "next" nodes?
 #   - This data structure is called a "directed graph." How would you test if your directed graph had a cycle?
 
+# Tests
+import unittest
+class Test(unittest.TestCase):
 
+    class LinkedListNode(object):
+
+        def __init__(self, value, next=None):
+            self.value = value
+            self.next  = next
+
+    def test_linked_list_with_no_cycle(self):
+        fourth = Test.LinkedListNode(4)
+        third = Test.LinkedListNode(3, fourth)
+        second = Test.LinkedListNode(2, third)
+        first = Test.LinkedListNode(1, second)
+        result = contains_cycle(first)
+        print("Result: ", result)
+        self.assertFalse(result)
+
+    def test_cycle_loops_to_beginning(self):
+        fourth = Test.LinkedListNode(4)
+        third = Test.LinkedListNode(3, fourth)
+        second = Test.LinkedListNode(2, third)
+        first = Test.LinkedListNode(1, second)
+        fourth.next = first
+        result = contains_cycle(first)
+        self.assertTrue(result)
+
+    def test_cycle_loops_to_middle(self):
+        fifth = Test.LinkedListNode(5)
+        fourth = Test.LinkedListNode(4, fifth)
+        third = Test.LinkedListNode(3, fourth)
+        second = Test.LinkedListNode(2, third)
+        first = Test.LinkedListNode(1, second)
+        fifth.next = third
+        result = contains_cycle(first)
+        self.assertTrue(result)
+
+    def test_two_node_cycle_at_end(self):
+        fifth = Test.LinkedListNode(5)
+        fourth = Test.LinkedListNode(4, fifth)
+        third = Test.LinkedListNode(3, fourth)
+        second = Test.LinkedListNode(2, third)
+        first = Test.LinkedListNode(1, second)
+        fifth.next = fourth
+        result = contains_cycle(first)
+        self.assertTrue(result)
+
+    def test_empty_list(self):
+        result = contains_cycle(None)
+        self.assertFalse(result)
+
+    def test_one_element_linked_list_no_cycle(self):
+        first = Test.LinkedListNode(1)
+        result = contains_cycle(first)
+        self.assertFalse(result)
+
+    def test_one_element_linked_list_cycle(self):
+        first = Test.LinkedListNode(1)
+        first.next = first
+        result = contains_cycle(first)
+        self.assertTrue(result)
+
+unittest.main(verbosity=2)

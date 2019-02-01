@@ -64,7 +64,7 @@ def reverse_linked_list(head_node):
 
 def reverse_linked_list_that_works_for_even_and_odd_number_of_nodes(head_node):
     if not head_node:
-        raise Exception("Linked List has no nodes")
+        return None
 
     if not head_node.next:
         return head_node

@@ -27,6 +27,7 @@
 # }
 #
 # Your output rectangle should use this format as well.
+import unittest
 
 
 def get_rectangular_intersection(rectangle_1, rectangle_2):
@@ -108,7 +109,12 @@ def get_rectangular_intersection_simplified(rectangle_1, rectangle_2):
     )
 
     if x_length < 1:
-        raise Exception("No intersection exists")
+        return {
+            "left_x": None,
+            "bottom_y": None,
+            "width": None,
+            "height": None,
+        }
 
     intersection["left_x"] = x_start
     intersection["width"] = x_length
@@ -120,7 +126,12 @@ def get_rectangular_intersection_simplified(rectangle_1, rectangle_2):
         rectangle_2["height"]
     )
     if y_length < 1:
-        raise Exception("No intersection exists")
+        return {
+            "left_x": None,
+            "bottom_y": None,
+            "width": None,
+            "height": None,
+        }
     intersection["bottom_y"] = y_start
     intersection["height"] = y_length
     return intersection
@@ -136,3 +147,163 @@ def get_overlap_simplified(point_1, length_1, point_2, length_2):
 
 print(get_rectangular_intersection_simplified(rect_1, rect_2))
 
+
+class Test(unittest.TestCase):
+
+    def test_overlap_along_both_axes(self):
+        rect1 = {
+            'left_x': 1,
+            'bottom_y': 1,
+            'width': 6,
+            'height': 3,
+        }
+        rect2 = {
+            'left_x': 5,
+            'bottom_y': 2,
+            'width': 3,
+            'height': 6,
+        }
+        expected = {
+            'left_x': 5,
+            'bottom_y': 2,
+            'width': 2,
+            'height': 2,
+        }
+        actual = get_rectangular_intersection_simplified(rect1, rect2)
+        self.assertEqual(actual, expected)
+
+
+    def test_one_rectangle_inside_another(self):
+        rect1 = {
+            'left_x': 1,
+            'bottom_y': 1,
+            'width': 6,
+            'height': 6,
+        }
+        rect2 = {
+            'left_x': 3,
+            'bottom_y': 3,
+            'width': 2,
+            'height': 2,
+        }
+        expected = {
+            'left_x': 3,
+            'bottom_y': 3,
+            'width': 2,
+            'height': 2,
+        }
+        actual = get_rectangular_intersection_simplified(rect1, rect2)
+        self.assertEqual(actual, expected)
+
+    def test_both_rectangles_the_same(self):
+        rect1 = {
+            'left_x': 2,
+            'bottom_y': 2,
+            'width': 4,
+            'height': 4,
+        }
+        rect2 = {
+            'left_x': 2,
+            'bottom_y': 2,
+            'width': 4,
+            'height': 4,
+        }
+        expected = {
+            'left_x': 2,
+            'bottom_y': 2,
+            'width': 4,
+            'height': 4,
+        }
+        actual = get_rectangular_intersection_simplified(rect1, rect2)
+        self.assertEqual(actual, expected)
+
+    def test_touch_on_horizontal_edge(self):
+        rect1 = {
+            'left_x': 1,
+            'bottom_y': 2,
+            'width': 3,
+            'height': 4,
+        }
+        rect2 = {
+            'left_x': 2,
+            'bottom_y': 6,
+            'width': 2,
+            'height': 2,
+        }
+        expected = {
+            'left_x': None,
+            'bottom_y': None,
+            'width': None,
+            'height': None,
+        }
+        actual = get_rectangular_intersection_simplified(rect1, rect2)
+        self.assertEqual(actual, expected)
+
+    def test_touch_on_vertical_edge(self):
+        rect1 = {
+            'left_x': 1,
+            'bottom_y': 2,
+            'width': 3,
+            'height': 4,
+        }
+        rect2 = {
+            'left_x': 4,
+            'bottom_y': 3,
+            'width': 2,
+            'height': 2,
+        }
+        expected = {
+            'left_x': None,
+            'bottom_y': None,
+            'width': None,
+            'height': None,
+        }
+        actual = get_rectangular_intersection_simplified(rect1, rect2)
+        self.assertEqual(actual, expected)
+
+    def test_touch_at_a_corner(self):
+        rect1 = {
+            'left_x': 1,
+            'bottom_y': 1,
+            'width': 2,
+            'height': 2,
+        }
+        rect2 = {
+            'left_x': 3,
+            'bottom_y': 3,
+            'width': 2,
+            'height': 2,
+        }
+        expected = {
+            'left_x': None,
+            'bottom_y': None,
+            'width': None,
+            'height': None,
+        }
+        actual = get_rectangular_intersection_simplified(rect1, rect2)
+        self.assertEqual(actual, expected)
+
+    def test_no_overlap(self):
+        rect1 = {
+            'left_x': 1,
+            'bottom_y': 1,
+            'width': 2,
+            'height': 2,
+        }
+        rect2 = {
+            'left_x': 4,
+            'bottom_y': 6,
+            'width': 3,
+            'height': 6,
+        }
+        expected = {
+            'left_x': None,
+            'bottom_y': None,
+            'width': None,
+            'height': None,
+        }
+        actual = get_rectangular_intersection_simplified(rect1, rect2)
+        self.assertEqual(actual, expected)
+
+
+unittest.main(verbosity=2)
