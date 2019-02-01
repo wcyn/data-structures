@@ -104,3 +104,5 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+SQL/bakery_schema_and_data.sql
