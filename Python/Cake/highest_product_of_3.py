@@ -150,3 +150,32 @@ class Test(unittest.TestCase):
 
 
 unittest.main(verbosity=2)
+
+
+# Extra exercise to get lowest sum of three
+def three_sum(nums):
+    """
+    :type nums: List[int]
+    :rtype: List[List[int]]
+    """
+    if len(nums) < 3:
+        return []
+
+    smallest_2_sum_nums = tuple(nums[:2])
+    smallest_2_sum = sum(smallest_2_sum_nums)
+    smallest_3_sum_nums = tuple(nums[:3])
+    smallest_3_sum = sum(smallest_3_sum_nums)
+    min_num = min(smallest_3_sum_nums)
+
+    for index in range(2, len(nums)):
+        current_2_sum = min_num + nums[index]
+        current_3_sum = smallest_2_sum + nums[index]
+        if smallest_3_sum > current_3_sum:
+            smallest_3_sum = current_3_sum
+            smallest_3_sum_nums = smallest_2_sum_nums + (nums[index],)
+
+        if smallest_2_sum > current_2_sum:
+            smallest_2_sum = current_2_sum
+            smallest_2_sum_nums = (min_num, nums[index])
+        min_num = min(min_num, nums[index])
+    return smallest_3_sum_nums
